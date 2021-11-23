@@ -148,9 +148,11 @@ public class MongoBulkWriter<IN> implements SinkWriter<IN, DocumentBulk, Documen
                 do {
                     try {
                         // ordered, non-bypass mode
-                        collection.insertMany(bulk.getDocuments());
-                        iterator.remove();
-                        break;
+                        if(bulk.getDocuments().size() > 0){
+                            collection.insertMany(bulk.getDocuments());
+                            iterator.remove();
+                            break;
+                        }
                     } catch (MongoException e) {
                         // maybe partial failure
                         LOGGER.error("Failed to flush data to MongoDB", e);
